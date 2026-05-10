@@ -93,7 +93,10 @@
     "uuid": ">=14.0.0",
     "zod": ">=3.23.0",
     "yaml": ">=2.8.4",
-    "postcss": ">=8.5.14"
+    "postcss": ">=8.5.14",
+    "ip-address": ">=10.2.0",
+    "file-type": ">=22.0.1",
+    "follow-redirects": ">=1.15.11"
   },
   "devDependencies": {
     "@openai/codex": "^0.98.0",
