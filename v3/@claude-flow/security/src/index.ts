@@ -109,6 +109,30 @@ export {
   type VerificationCode,
 } from './token-generator.js';
 
+// Runtime Security Guardian
+export {
+  RuntimeSecurityGuardian,
+  securityGuardian,
+  type SecurityAlert,
+  type GuardianConfig,
+} from './runtime-guardian.js';
+
+// Secure HTTP Client
+export {
+  SecureHttpClient,
+  SecureHttpClientError,
+  secureHttpClient,
+  type SecureRequestConfig,
+  type SecureResponse,
+} from './secure-http-client.js';
+
+// Security Bootstrap
+export {
+  SecurityBootstrap,
+  securityBootstrap,
+  type BootstrapConfig,
+} from './bootstrap.js';
+
 // ============================================================================
 // Convenience Factory Functions
 // ============================================================================
