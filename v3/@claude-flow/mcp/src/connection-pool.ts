@@ -216,7 +216,7 @@ export class ConnectionPool extends EventEmitter implements IConnectionPool {
 
     if (this.connections.size < this.config.minConnections && !this.isShuttingDown) {
       this.createConnection().catch((err) => {
-        this.logger.error('Failed to create replacement connection', err);
+        this.logger.error('Failed to create replacement connection', { error: err instanceof Error ? err.message : String(err) });
       });
     }
   }

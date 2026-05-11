@@ -98,8 +98,12 @@ export class SessionManager implements ISessionManager {
     });
 
     // Persist sessions asynchronously
-    this.persistSessions().catch(() => {
-      // Silently ignore persistence errors
+    this.persistSessions().catch((err) => {
+      this.eventBus.emit(SystemEventTypes.ERROR, {
+        source: 'SessionManager',
+        error: err instanceof Error ? err.message : String(err),
+        context: 'persistSessions',
+      });
     });
 
     return session;
@@ -142,8 +146,12 @@ export class SessionManager implements ISessionManager {
     this.sessionProfiles.delete(sessionId);
 
     // Persist sessions asynchronously
-    this.persistSessions().catch(() => {
-      // Silently ignore persistence errors
+    this.persistSessions().catch((err) => {
+      this.eventBus.emit(SystemEventTypes.ERROR, {
+        source: 'SessionManager',
+        error: err instanceof Error ? err.message : String(err),
+        context: 'persistSessions',
+      });
     });
   }
 

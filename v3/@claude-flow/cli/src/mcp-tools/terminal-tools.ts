@@ -196,6 +196,7 @@ export const terminalTools: MCPTool[] = [
           maxBuffer: 5 * 1024 * 1024,
           stdio: ['pipe', 'pipe', 'pipe'],
           env: { ...process.env, ...session.env },
+          shell: false,
         });
         exitCode = 0;
       } catch (err: any) {

@@ -25,6 +25,8 @@ interface ToolMetadata {
   errorCount: number;
 }
 
+const DEFAULT_TIMEOUT_MS = 30000;
+
 interface ToolSearchOptions {
   category?: string;
   tags?: string[];
@@ -307,10 +309,21 @@ export class ToolRegistry extends EventEmitter {
     metadata.callCount++;
     metadata.lastCalled = new Date();
 
+    // Get timeout from tool options or use default
+    const timeout = (metadata.tool as MCPTool & { timeout?: number }).timeout ?? DEFAULT_TIMEOUT_MS;
+
     try {
       this.emit('tool:called', { name, input });
 
-      const result = await metadata.tool.handler(input, execContext);
+      // Wrap handler with timeout
+      const result = await Promise.race([
+        metadata.tool.handler(input, execContext),
+        new Promise<never>((_, reject) => {
+          setTimeout(() => {
+            reject(new Error(`Tool execution timeout after ${timeout}ms`));
+          }, timeout);
+        }),
+      ]);
 
       const duration = performance.now() - startTime;
       this.updateAverageExecutionTime(metadata, duration);

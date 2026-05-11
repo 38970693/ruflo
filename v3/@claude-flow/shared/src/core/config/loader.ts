@@ -4,8 +4,9 @@
  */
 
 import { readFile } from 'fs/promises';
-import { join, resolve } from 'path';
-import { existsSync } from 'fs';
+import { join, resolve, relative, isAbsolute } from 'path';
+import { existsSync, stat } from 'fs';
+import { realpath } from 'fs/promises';
 import type { SystemConfig } from './schema.js';
 import { validateSystemConfig, type ValidationResult } from './validator.js';
 import { defaultSystemConfig, mergeWithDefaults } from './defaults.js';
@@ -49,9 +50,44 @@ async function findConfigFile(directory: string): Promise<string | null> {
 }
 
 /**
- * Load configuration from JSON file
+ * Validate path is within allowed directory (prevents path traversal attacks)
  */
-async function loadJsonConfig(path: string): Promise<unknown> {
+async function validateSafePath(targetPath: string, allowedDir: string): Promise<boolean> {
+  try {
+    // Resolve both paths to absolute paths
+    const resolvedTarget = resolve(targetPath);
+    const resolvedAllowed = resolve(allowedDir);
+
+    // Get real path (resolves symlinks)
+    const realTarget = await realpath(resolvedTarget);
+    const realAllowed = await realpath(resolvedAllowed);
+
+    // Check if the real path is within allowed directory
+    const relativePath = relative(realAllowed, realTarget);
+    return !relativePath.startsWith('..') && !isAbsolute(relativePath);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Load configuration from JSON file with path validation
+ */
+async function loadJsonConfig(path: string, allowedDir?: string): Promise<unknown> {
+  // Path traversal validation
+  if (allowedDir) {
+    const isSafe = await validateSafePath(path, allowedDir);
+    if (!isSafe) {
+      throw new Error(`Path traversal attempt detected: ${path}`);
+    }
+  }
+
+  // Verify file exists and is a file
+  const fileStat = await stat(path);
+  if (!fileStat.isFile()) {
+    throw new Error(`Config path is not a file: ${path}`);
+  }
+
   const content = await readFile(path, 'utf8');
   return JSON.parse(content);
 }
@@ -222,10 +258,19 @@ export class ConfigLoader {
   }
 
   /**
-   * Load configuration from specific file
+   * Load configuration from specific file with path validation
    */
-  async loadFromFile(filePath: string): Promise<LoadedConfig> {
+  async loadFromFile(filePath: string, allowedDir?: string): Promise<LoadedConfig> {
     const absolutePath = resolve(filePath);
+
+    // Validate path is within allowed directory
+    if (allowedDir) {
+      const isSafe = await validateSafePath(absolutePath, allowedDir);
+      if (!isSafe) {
+        throw new Error(`Path traversal attempt detected: ${filePath}`);
+      }
+    }
+
     const fileConfig = await loadJsonConfig(absolutePath);
     const validation = validateSystemConfig(fileConfig);
 
@@ -276,11 +321,11 @@ export class ConfigLoader {
 /**
  * Load configuration (convenience function)
  */
-export async function loadConfig(options?: { paths?: string[]; file?: string }): Promise<LoadedConfig> {
+export async function loadConfig(options?: { paths?: string[]; file?: string; allowedDir?: string }): Promise<LoadedConfig> {
   const loader = new ConfigLoader(options?.paths);
 
   if (options?.file) {
-    return loader.loadFromFile(options.file);
+    return loader.loadFromFile(options.file, options?.allowedDir);
   }
 
   return loader.load();

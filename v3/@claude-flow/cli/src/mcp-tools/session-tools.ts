@@ -41,6 +41,11 @@ function getSessionDir(): string {
 }
 
 function getSessionPath(sessionId: string): string {
+  // Validate sessionId length to prevent DoS and memory issues
+  if (sessionId.length < 4 || sessionId.length > 256) {
+    throw new Error('Invalid session ID length: must be 4-256 characters');
+  }
+
   // Sanitize sessionId to prevent path traversal
   const safeId = sessionId.replace(/[^a-zA-Z0-9_-]/g, '_');
   return join(getSessionDir(), `${safeId}.json`);
