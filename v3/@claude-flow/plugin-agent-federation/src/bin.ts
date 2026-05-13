@@ -14,7 +14,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { hostname } from 'node:os';
 import { AgentFederationPlugin } from './plugin.js';
-import type { PluginContext } from '@claude-flow/shared/src/plugin-interface.js';
+import type { PluginContext } from '@claude-flow/shared';
 
 function loadDotenv(): { loaded: string | null; count: number } {
   let dir = process.cwd();

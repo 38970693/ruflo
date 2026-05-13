@@ -22,14 +22,17 @@ const isCosmeticAgentdbPatchNoise = (msg: unknown): boolean => {
   return s.includes('[AgentDB Patch]') && s.includes('Controller index not found');
 };
 
-const origWarn = console.warn.bind(console);
-const origLog = console.log.bind(console);
+// Use type assertion to allow reassignment of global console methods
+const consoleAny = console as { warn: typeof console.warn; log: typeof console.log };
 
-console.warn = (...args: unknown[]) => {
+const origWarn = consoleAny.warn.bind(console);
+const origLog = consoleAny.log.bind(console);
+
+consoleAny.warn = (...args: unknown[]) => {
   if (isCosmeticAgentdbPatchNoise(args[0])) return;
   origWarn(...args);
 };
-console.log = (...args: unknown[]) => {
+consoleAny.log = (...args: unknown[]) => {
   if (isCosmeticAgentdbPatchNoise(args[0])) return;
   origLog(...args);
 };

@@ -29,6 +29,7 @@ interface TerminalSession {
   workingDir: string;
   history: Array<{ command: string; output: string; timestamp: string; exitCode: number }>;
   env: Record<string, string>;
+  shell?: string;
 }
 
 interface TerminalStore {
@@ -196,7 +197,7 @@ export const terminalTools: MCPTool[] = [
           maxBuffer: 5 * 1024 * 1024,
           stdio: ['pipe', 'pipe', 'pipe'],
           env: { ...process.env, ...session.env },
-          shell: false,
+          shell: session.shell ?? undefined,
         });
         exitCode = 0;
       } catch (err: any) {

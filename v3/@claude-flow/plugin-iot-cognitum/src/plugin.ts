@@ -4,7 +4,7 @@ import type {
   MCPToolDefinition,
   CLICommandDefinition,
   AgentTypeDefinition,
-} from '@claude-flow/shared/src/plugin-interface.js';
+} from '@claude-flow/shared';
 
 import { IoTCoordinator } from './application/iot-coordinator.js';
 import { HealthProbeWorker } from './workers/health-probe-worker.js';

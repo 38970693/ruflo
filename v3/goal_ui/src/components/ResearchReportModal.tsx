@@ -37,7 +37,7 @@ import {
   FileDown,
   CheckSquare,
 } from "lucide-react";
-import { Step } from "@/lib/goapPlanner";
+import { Step, DataItem } from "@/lib/goapPlanner";
 import { supabase } from "@/integrations/supabase/client";
 
 interface ResearchReportModalProps {
@@ -106,7 +106,7 @@ export const ResearchReportModal = ({
       const researchContext = steps.map(step => ({
         stepTitle: step.title,
         findings: step.data.map(item => {
-          const details = item.details as any;
+          const details = item.details as DataItem;
           return {
             title: item.text,
             content: details?.objective || details?.content || item.text,
@@ -141,9 +141,9 @@ export const ResearchReportModal = ({
   };
 
   // Extract all research items with their sources as citations
-  const allCitations = steps.flatMap(step => 
+  const allCitations = steps.flatMap(step =>
     step.data.map(item => {
-      const details = item.details as any;
+      const details = item.details as DataItem;
       return {
         title: item.text,
         source: details?.source || 'Research Analysis',
@@ -451,7 +451,7 @@ export const ResearchReportModal = ({
       report += `## ${idx + 1}. ${step.title}\n\n`;
       report += `${step.description}\n\n`;
       step.data.forEach(item => {
-        const details = item.details as any;
+        const details = item.details as DataItem;
         report += `- **${item.text}**: ${details?.objective || item.text}\n`;
       });
       report += `\n`;
@@ -623,7 +623,7 @@ export const ResearchReportModal = ({
                     {step.title}
                   </h4>
                   {step.data.map((item, itemIdx) => {
-                    const details = item.details as any;
+                    const details = item.details as DataItem;
                     return (
                       <div key={itemIdx} className="rounded-lg border p-4 space-y-2">
                         <div className="flex items-start justify-between gap-3">

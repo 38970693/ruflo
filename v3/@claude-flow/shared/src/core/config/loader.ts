@@ -5,7 +5,8 @@
 
 import { readFile } from 'fs/promises';
 import { join, resolve, relative, isAbsolute } from 'path';
-import { existsSync, stat } from 'fs';
+import { existsSync } from 'fs';
+import { stat } from 'fs/promises';
 import { realpath } from 'fs/promises';
 import type { SystemConfig } from './schema.js';
 import { validateSystemConfig, type ValidationResult } from './validator.js';

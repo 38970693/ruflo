@@ -1,5 +1,4 @@
-import type { MCPToolDefinition } from '@claude-flow/shared/src/plugin-interface.js';
-import type { PluginContext } from '@claude-flow/shared/src/plugin-interface.js';
+import type { MCPToolDefinition, PluginContext } from '@claude-flow/shared';
 import type { IoTCoordinator } from './application/iot-coordinator.js';
 
 type CoordinatorGetter = () => IoTCoordinator | null;

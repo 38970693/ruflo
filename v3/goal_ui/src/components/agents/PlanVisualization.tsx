@@ -64,7 +64,7 @@ export function PlanVisualization({
         </div>
       </CardHeader>
       <CardContent>
-        <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as any)}>
+        <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'graph' | 'timeline')}>
           <TabsList className="mb-4">
             <TabsTrigger value="graph">Graph View</TabsTrigger>
             <TabsTrigger value="timeline">Timeline View</TabsTrigger>

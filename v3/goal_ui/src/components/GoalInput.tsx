@@ -10,7 +10,7 @@ interface GoalInputProps {
   onSubmit: (goal: string) => void;
   isPlanning: boolean;
   onAdvancedSettings?: () => void;
-  onConfigUpdate?: (config: any) => void;
+  onConfigUpdate?: (config: ResearchConfig) => void;
 }
 
 export const GoalInput = ({ onSubmit, isPlanning, onAdvancedSettings, onConfigUpdate }: GoalInputProps) => {

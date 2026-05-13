@@ -610,7 +610,7 @@ Always include sources, confidence levels, and timestamps when available.`,
                     })
                   }
                   style={{
-                    ['--primary' as any]: primaryColor,
+                    ['--primary' as string]: primaryColor,
                   }}
                 />
               </div>
@@ -629,7 +629,7 @@ Always include sources, confidence levels, and timestamps when available.`,
                     })
                   }
                   style={{
-                    ['--primary' as any]: primaryColor,
+                    ['--primary' as string]: primaryColor,
                   }}
                 />
               </div>
@@ -648,7 +648,7 @@ Always include sources, confidence levels, and timestamps when available.`,
                     })
                   }
                   style={{
-                    ['--primary' as any]: primaryColor,
+                    ['--primary' as string]: primaryColor,
                   }}
                 />
               </div>
@@ -671,7 +671,7 @@ Always include sources, confidence levels, and timestamps when available.`,
                           });
                         }}
                         style={{
-                          ['--primary' as any]: primaryColor,
+                          ['--primary' as string]: primaryColor,
                         }}
                       />
                       <Label htmlFor={trigger} className="cursor-pointer text-sm">
@@ -925,7 +925,7 @@ Always include sources, confidence levels, and timestamps when available.`,
                     })
                   }
                   style={{
-                    ['--primary' as any]: primaryColor,
+                    ['--primary' as string]: primaryColor,
                   }}
                 />
               </div>
@@ -944,7 +944,7 @@ Always include sources, confidence levels, and timestamps when available.`,
                     })
                   }
                   style={{
-                    ['--primary' as any]: primaryColor,
+                    ['--primary' as string]: primaryColor,
                   }}
                 />
               </div>
@@ -963,7 +963,7 @@ Always include sources, confidence levels, and timestamps when available.`,
                     })
                   }
                   style={{
-                    ['--primary' as any]: primaryColor,
+                    ['--primary' as string]: primaryColor,
                   }}
                 />
               </div>

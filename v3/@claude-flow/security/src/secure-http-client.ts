@@ -242,8 +242,8 @@ export class SecureHttpClient extends EventEmitter {
     url: URL,
     options: any,
     config: SecureRequestConfig,
-    resolve: Function,
-    reject: Function
+    resolve: (value: SecureResponse) => void,
+    reject: (reason?: any) => void
   ) {
     const requestFn = url.protocol === 'https:' ? httpsRequest : httpRequest;
     const req = requestFn(options);
@@ -270,8 +270,10 @@ export class SecureHttpClient extends EventEmitter {
             _redirectCount: redirectCount + 1,
           };
           this.request(newConfig).then(resolve).catch(reject);
-          return;
+        } else {
+          reject(new SecureHttpClientError('Redirect without location', 'REDIRECT_ERROR'));
         }
+        return;
       }
 
       res.on('data', (chunk) => {

@@ -87,6 +87,7 @@ export {
 // =============================================================================
 export * from './plugin-loader.js';
 export * from './plugin-registry.js';
+export * from './plugin-interface.js';
 
 // =============================================================================
 // Core - DDD interfaces, config, orchestrator

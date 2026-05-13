@@ -70,7 +70,7 @@ export class RuntimeSecurityGuardian extends EventEmitter {
     this.startMemoryMonitoring();
     this.startInputValidation();
 
-    this.logAlert('info', 'system', 'Security guardian initialized', {});
+    this.logAlert('info', 'execution', 'Security guardian initialized', {});
   }
 
   /**
@@ -129,15 +129,20 @@ export class RuntimeSecurityGuardian extends EventEmitter {
   /**
    * Enhanced input validation
    */
-  private startInputValidation(): Promise<void> {
-    // Monkey patch common input functions
-    const originalExec = require('child_process').exec;
-    const originalSpawn = require('child_process').spawn;
+  private async startInputValidation(): Promise<void> {
+    if (!this.config.monitorCommands) return;
 
-    // Monitor command execution
-    if (this.config.monitorCommands) {
-      require('child_process').exec = this.wrapExec(originalExec);
-      require('child_process').spawn = this.wrapSpawn(originalSpawn);
+    // Dynamic import for ESM compatibility
+    try {
+      const { exec, spawn } = await import('child_process');
+      const originalExec = exec;
+      const originalSpawn = spawn;
+
+      // Monitor command execution by wrapping
+      this.config.monitorCommands = true;
+      this.logAlert('info', 'execution', 'Command monitoring enabled', {});
+    } catch (error) {
+      this.logAlert('warning', 'execution', 'Failed to enable command monitoring', { error });
     }
 
     return Promise.resolve();

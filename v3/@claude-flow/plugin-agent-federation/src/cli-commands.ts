@@ -1,4 +1,4 @@
-import type { CLICommandDefinition, PluginContext } from '@claude-flow/shared/src/plugin-interface.js';
+import type { CLICommandDefinition, PluginContext } from '@claude-flow/shared';
 import type { FederationCoordinator } from './application/federation-coordinator.js';
 import { getTrustLevelLabel, TrustLevel } from './domain/entities/trust-level.js';
 

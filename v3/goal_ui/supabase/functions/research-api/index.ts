@@ -6,39 +6,34 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface ResearchRequest {
-  goal: string;
-  config?: {
-    parameters?: {
-      maxSources?: number;
-      minConfidence?: number;
-      maxSteps?: number;
-      timeout?: number;
-      parallelAgents?: number;
-    };
-    filters?: {
-      sourceTypes?: string[];
-      excludeDomains?: string[];
-      dateRange?: string;
-    };
-    researchGuidance?: {
-      timeframe?: string;
-      depth?: string;
-      perspective?: string;
-      focusAreas?: string[];
-    };
-    goapConfig?: {
-      enableReplanning?: boolean;
-      executionMode?: string;
-      costOptimization?: boolean;
-      parallelExecution?: boolean;
-    };
-    prompts?: {
-      systemPrompt?: string;
-    };
+interface ResearchConfig {
+  parameters?: {
+    maxSources?: number;
+    minConfidence?: number;
+    maxSteps?: number;
+    timeout?: number;
+    parallelAgents?: number;
   };
-  aiModel?: string;
-  stream?: boolean;
+  filters?: {
+    sourceTypes?: string[];
+    excludeDomains?: string[];
+    dateRange?: string;
+  };
+  researchGuidance?: {
+    timeframe?: string;
+    depth?: string;
+    perspective?: string;
+    focusAreas?: string[];
+  };
+  goapConfig?: {
+    enableReplanning?: boolean;
+    executionMode?: string;
+    costOptimization?: boolean;
+    parallelExecution?: boolean;
+  };
+  prompts?: {
+    systemPrompt?: string;
+  };
 }
 
 interface ResearchStep {
@@ -185,7 +180,7 @@ serve(async (req) => {
 async function executeResearchStep(
   step: ResearchStep,
   goal: string,
-  config: any,
+  config: ResearchConfig,
   aiModel: string,
   apiKey: string
 ) {
@@ -270,7 +265,7 @@ async function executeResearchStep(
   };
 }
 
-function buildSystemPrompt(config: any): string {
+function buildSystemPrompt(config: ResearchConfig): string {
   const depth = config.researchGuidance?.depth || 'moderate';
   const perspective = config.researchGuidance?.perspective || 'balanced';
   const timeframe = config.researchGuidance?.timeframe || 'recent';
@@ -309,7 +304,7 @@ function buildSystemPrompt(config: any): string {
   return prompt;
 }
 
-function buildUserPrompt(step: ResearchStep, goal: string, config: any): string {
+function buildUserPrompt(step: ResearchStep, goal: string, config: ResearchConfig): string {
   let prompt = `Research Goal: ${goal}\n\n`;
   prompt += `Current Step: ${step.stepTitle}\n`;
   prompt += `Step Description: ${step.stepDescription}\n\n`;

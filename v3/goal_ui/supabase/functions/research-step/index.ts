@@ -57,6 +57,23 @@ interface ResearchDataItem {
   timestamp: string;
 }
 
+interface GroundingSupport {
+  segment?: { text?: string };
+  source?: { uri?: string; title?: string };
+}
+
+interface RawResearchItem {
+  title: string;
+  content?: string;
+  source?: string;
+  confidence?: number;
+}
+
+interface GroundingSource {
+  url?: string;
+  title?: string;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -340,8 +357,8 @@ Format (all fields required):
 
     // Extract grounding metadata (citations from Google Search)
     const groundingMetadata = data.choices?.[0]?.message?.grounding_metadata;
-    const groundingSources = groundingMetadata?.search_entry_point?.rendered_content || 
-                            groundingMetadata?.grounding_supports?.map((s: any) => ({
+    const groundingSources: GroundingSource[] = groundingMetadata?.search_entry_point?.rendered_content ||
+                            groundingMetadata?.grounding_supports?.map((s: GroundingSupport) => ({
                               url: s.segment?.text || s.source?.uri,
                               title: s.source?.title
                             })) || [];
@@ -357,7 +374,7 @@ Format (all fields required):
     const researchItems = JSON.parse(toolCall.function.arguments).items;
 
     // Transform to match the expected interface and enrich with grounding citations
-    const formattedData: ResearchDataItem[] = researchItems.map((item: any, index: number) => {
+    const formattedData: ResearchDataItem[] = (researchItems as RawResearchItem[]).map((item: RawResearchItem, index: number) => {
       // If the item doesn't have a source, try to use grounding sources
       let source = item.source;
       if (!source && groundingSources.length > index) {

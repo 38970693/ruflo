@@ -13,7 +13,7 @@ async function basicExample() {
 
   // Initialize backend
   const backend = new AgentDBBackend({
-    dbPath: ':memory:',
+    databasePath: ':memory:',
     namespace: 'demo',
     vectorDimension: 384, // Using MiniLM embeddings
     hnswM: 16,
@@ -117,10 +117,10 @@ async function hybridExample() {
 
   const hybrid = new HybridBackend({
     sqlite: {
-      dbPath: ':memory:',
+      databasePath: ':memory:',
     },
     agentdb: {
-      dbPath: ':memory:',
+      databasePath: ':memory:',
       vectorDimension: 384,
       hnswM: 16,
     },
@@ -214,7 +214,7 @@ async function vectorSearchExample() {
   console.log('\n=== Vector Search Performance Example ===\n');
 
   const backend = new AgentDBBackend({
-    dbPath: ':memory:',
+    databasePath: ':memory:',
     vectorDimension: 128, // Smaller for demo
     hnswM: 16,
     hnswEfConstruction: 100,
@@ -280,7 +280,7 @@ async function gracefulDegradationExample() {
 
   // Create backend that might not have agentdb
   const backend = new AgentDBBackend({
-    dbPath: ':memory:',
+    databasePath: ':memory:',
   });
 
   await backend.initialize();

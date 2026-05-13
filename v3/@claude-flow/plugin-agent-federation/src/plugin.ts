@@ -4,7 +4,7 @@ import type {
   MCPToolDefinition,
   CLICommandDefinition,
   AgentTypeDefinition,
-} from '@claude-flow/shared/src/plugin-interface.js';
+} from '@claude-flow/shared';
 
 import * as ed from '@noble/ed25519';
 import { createHash } from 'node:crypto';

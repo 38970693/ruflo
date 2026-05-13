@@ -1,5 +1,4 @@
-import type { MCPToolDefinition } from '@claude-flow/shared/src/plugin-interface.js';
-import type { PluginContext } from '@claude-flow/shared/src/plugin-interface.js';
+import type { MCPToolDefinition, PluginContext } from '@claude-flow/shared';
 import type { FederationCoordinator } from './application/federation-coordinator.js';
 import type { FederationMessageType } from './domain/entities/federation-envelope.js';
 

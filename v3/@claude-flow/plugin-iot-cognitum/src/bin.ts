@@ -15,7 +15,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { IoTCognitumPlugin } from './plugin.js';
-import type { PluginContext } from '@claude-flow/shared/src/plugin-interface.js';
+import type { PluginContext } from '@claude-flow/shared';
 
 const SEED_LINK_LOCAL = 'http://169.254.42.1';
 const SEED_LAN_HTTPS = 'https://169.254.42.1:8443';

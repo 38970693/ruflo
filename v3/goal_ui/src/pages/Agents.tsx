@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,7 +51,7 @@ type SwarmMode = "distributed" | "pipeline" | "collaborative";
 interface Agent {
   id: string;
   name: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   status: AgentStatus;
   currentTask?: string;
 }

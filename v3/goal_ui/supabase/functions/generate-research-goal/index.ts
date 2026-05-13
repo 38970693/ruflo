@@ -11,6 +11,14 @@ interface GenerateGoalRequest {
   customContext?: string;
 }
 
+interface GoalResult {
+  goals: string[];
+}
+
+interface GoalItem {
+  title: string;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -157,8 +165,8 @@ Push the boundaries. Be specific. Be innovative.`;
       throw new Error('No tool call in AI response');
     }
 
-    const result = JSON.parse(toolCall.function.arguments);
-    const goals = result.goals.map((g: any) => g.title);
+    const result: GoalResult = JSON.parse(toolCall.function.arguments);
+    const goals = (result.goals as GoalItem[]).map((g: GoalItem) => g.title);
 
     console.log('Generated goals:', goals);
 

@@ -5,6 +5,29 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 
+// Type definitions for external widget
+interface RufloWidgetConfig {
+  primaryColor: string;
+  accentColor: string;
+  backgroundColor: string;
+  cardBackgroundColor: string;
+  textColor: string;
+  fontFamily: string;
+  defaultGoal: string;
+}
+
+interface RufloWidget {
+  version: string;
+  init: (config?: RufloWidgetConfig) => void;
+}
+
+declare global {
+  interface Window {
+    RufloResearchWidgetConfig?: RufloWidgetConfig;
+    RufloResearchWidget?: RufloWidget;
+  }
+}
+
 const Demo = () => {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
@@ -34,7 +57,7 @@ const Demo = () => {
 
   useEffect(() => {
     // Configure widget before loading
-    (window as any).RufloResearchWidgetConfig = {
+    window.RufloResearchWidgetConfig = {
       primaryColor: "#8b5cf6",
       accentColor: "#22c55e",
       backgroundColor: "#1a1a1a",
@@ -90,8 +113,8 @@ const Demo = () => {
           console.log("[Demo] Widget loaded successfully");
 
           // Check if widget initialized
-          if ((window as any).RufloResearchWidget) {
-            console.log("[Demo] Widget version:", (window as any).RufloResearchWidget.version);
+          if (window.RufloResearchWidget) {
+            console.log("[Demo] Widget version:", window.RufloResearchWidget.version);
             toast({
               title: "Widget Ready",
               description: "RuFlo Research Widget loaded successfully",
@@ -126,8 +149,8 @@ const Demo = () => {
           link.parentNode.removeChild(link);
         }
         // Clear widget config
-        delete (window as any).RufloResearchWidgetConfig;
-        delete (window as any).RufloResearchWidget;
+        delete window.RufloResearchWidgetConfig;
+        delete window.RufloResearchWidget;
       };
     };
 

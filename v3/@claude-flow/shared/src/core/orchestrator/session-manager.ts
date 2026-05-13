@@ -99,7 +99,7 @@ export class SessionManager implements ISessionManager {
 
     // Persist sessions asynchronously
     this.persistSessions().catch((err) => {
-      this.eventBus.emit(SystemEventTypes.ERROR, {
+      this.eventBus.emit(SystemEventTypes.SYSTEM_ERROR, {
         source: 'SessionManager',
         error: err instanceof Error ? err.message : String(err),
         context: 'persistSessions',
@@ -147,7 +147,7 @@ export class SessionManager implements ISessionManager {
 
     // Persist sessions asynchronously
     this.persistSessions().catch((err) => {
-      this.eventBus.emit(SystemEventTypes.ERROR, {
+      this.eventBus.emit(SystemEventTypes.SYSTEM_ERROR, {
         source: 'SessionManager',
         error: err instanceof Error ? err.message : String(err),
         context: 'persistSessions',

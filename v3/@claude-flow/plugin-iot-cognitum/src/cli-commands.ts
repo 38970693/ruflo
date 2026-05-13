@@ -1,4 +1,4 @@
-import type { CLICommandDefinition, PluginContext } from '@claude-flow/shared/src/plugin-interface.js';
+import type { CLICommandDefinition, PluginContext } from '@claude-flow/shared';
 import type { IoTCoordinator } from './application/iot-coordinator.js';
 import { getDeviceTrustLabel } from './domain/entities/device-trust-level.js';
 

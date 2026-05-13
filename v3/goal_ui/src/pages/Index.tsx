@@ -40,6 +40,14 @@ import { GOAPPlanner, parseGoal, type Step, type DataItem } from "@/lib/goapPlan
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+interface Recommendation {
+  title: string;
+  content: string;
+  source?: string;
+  confidence?: number;
+  timestamp?: string;
+}
+
 interface WidgetConfig {
   primaryColor: string;
   accentColor: string;
@@ -62,6 +70,23 @@ interface WidgetConfig {
   compactMode: boolean;
   enableAI: boolean;
   aiModel: string;
+}
+
+interface ResearchContextItem {
+  id: string;
+  title: string;
+  content: string;
+  source?: string;
+  confidence?: number;
+  timestamp?: string;
+}
+
+interface ResearchItem {
+  title: string;
+  content?: string;
+  source?: string;
+  confidence?: number;
+  timestamp?: string;
 }
 
 const defaultResearchConfig: ResearchConfig = {
@@ -160,7 +185,7 @@ const Index = () => {
   const [showFinalAnalysis, setShowFinalAnalysis] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showReviseForm, setShowReviseForm] = useState(false);
-  const [finalRecommendations, setFinalRecommendations] = useState<any[]>([]);
+  const [finalRecommendations, setFinalRecommendations] = useState<Recommendation[]>([]);
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const [researchConfig, setResearchConfig] = useState<ResearchConfig>(defaultResearchConfig);
   const [currentGOAPState, setCurrentGOAPState] = useState<Record<string, boolean | string | number>>(defaultResearchConfig.stateDefinition.currentState);
@@ -617,7 +642,7 @@ const Index = () => {
     await new Promise(resolve => setTimeout(resolve, 4500));
 
     // Keep a working copy that we update with AI data
-    let workingSteps = [...initialSteps];
+    const workingSteps = [...initialSteps];
 
     // Process each step sequentially
     for (let i = 0; i < workingSteps.length; i++) {
@@ -654,10 +679,10 @@ const Index = () => {
           const currentStep = workingSteps[i];
           
           // Build context from all previous completed steps (with their AI data)
-          const previousStepsData = workingSteps.slice(0, i).map(step => ({
+          const previousStepsData: PreviousStepData[] = workingSteps.slice(0, i).map(step => ({
             stepTitle: step.title,
             data: step.data.map(item => {
-              const details = item.details as any;
+              const details = item.details as DataItem;
               return {
                 id: '',
                 title: item.text,
@@ -715,7 +740,7 @@ const Index = () => {
             console.log(`✅ Gemini returned ${data.length} items for step ${i}`);
             
             // Transform AI data into step data format
-            const aiData = data.map((item: any) => ({
+            const aiData: Array<{ text: string; icon: typeof Sparkles; details: DataItem }> = data.map((item: ResearchItem) => ({
               text: item.title,
               icon: Sparkles,
               details: {
@@ -774,10 +799,10 @@ const Index = () => {
     if (widgetConfig.enableAI) {
       try {
         // Build comprehensive context from all completed steps
-        const allResearchContext = workingSteps.map(step => ({
+        const allResearchContext: PreviousStepData[] = workingSteps.map(step => ({
           stepTitle: step.title,
           data: step.data.map(item => {
-            const details = item.details as any;
+            const details = item.details as DataItem;
             return {
               id: '',
               title: item.text,
@@ -1378,7 +1403,7 @@ const Index = () => {
                         }}
                       >
                         <div className="space-y-4">
-                          {finalRecommendations.slice(0, 4).map((rec: any, idx: number) => (
+                          {finalRecommendations.slice(0, 4).map((rec: Recommendation, idx: number) => (
                             <div key={idx} className="rounded p-4" style={{ backgroundColor: `${widgetConfig.accentColor}0d` }}>
                               <div className="font-medium mb-1" style={{ color: widgetConfig.textColor }}>{rec.title}</div>
                               <p className="text-sm" style={{ color: widgetConfig.secondaryTextColor }}>{rec.content}</p>

@@ -9,7 +9,7 @@ import { Search, Download, Filter, MessageSquare } from 'lucide-react';
 interface AgenticFlowEvent {
   type: string;
   timestamp: number;
-  data: any;
+  data: Record<string, unknown>;
 }
 
 interface RealTimeEventLogProps {

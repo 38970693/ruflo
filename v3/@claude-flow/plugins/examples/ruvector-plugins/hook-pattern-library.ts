@@ -173,11 +173,13 @@ export class HookPatternLibrary {
       pattern.metadata.updatedAt = new Date();
       pattern.metadata.lastUsed = new Date();
 
-      if (!pattern.fileTypes.includes(safeFileType)) {
-        pattern.fileTypes.push(safeFileType);
+      const safeFileTypeVal = safeFileType ?? fileType;
+      const safeOpVal = safeOperation ?? operation;
+      if (!pattern.fileTypes.includes(safeFileTypeVal)) {
+        pattern.fileTypes.push(safeFileTypeVal);
       }
-      if (!pattern.operations.includes(safeOperation)) {
-        pattern.operations.push(safeOperation);
+      if (!pattern.operations.includes(safeOpVal)) {
+        pattern.operations.push(safeOpVal);
       }
 
       // Update embedding
@@ -193,10 +195,10 @@ export class HookPatternLibrary {
       });
     } else {
       await this.recordPattern({
-        hookName: safeHookName,
+        hookName: safeHookName ?? hookName,
         event,
-        fileTypes: [safeFileType],
-        operations: [safeOperation],
+        fileTypes: [safeFileType ?? fileType],
+        operations: [safeOperation ?? operation],
         effectiveness: success ? 1 : 0,
         executionTime,
         usageCount: 1,
@@ -218,8 +220,8 @@ export class HookPatternLibrary {
   async findPatterns(fileType: string, operation: string, k: number = 5): Promise<PatternMatch[]> {
     const db = await this.ensureInitialized();
 
-    const safeFileType = Security.validateString(fileType, { maxLength: 50 });
-    const safeOperation = Security.validateString(operation, { maxLength: 50 });
+    const safeFileType = Security.validateString(fileType, { maxLength: 50 }) ?? fileType;
+    const safeOperation = Security.validateString(operation, { maxLength: 50 }) ?? operation;
 
     const queryEmbedding = this.generateEmbedding('', HookEvent.PreFileWrite, [safeFileType], [safeOperation]);
     const searchResults = db.search(queryEmbedding, k * 2);
@@ -439,7 +441,7 @@ export const hookPatternLibraryPlugin = new PluginBuilder('hook-pattern-library'
       .build(),
   ])
   .withHooks([
-    new HookBuilder(HookEvent.PostToolCall)
+    new HookBuilder(HookEvent.PostToolUse)
       .withName('hook-auto-record')
       .withDescription('Auto-record hook executions')
       .withPriority(HookPriority.Deferred)

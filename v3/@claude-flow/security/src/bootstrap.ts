@@ -162,7 +162,7 @@ export class SecurityBootstrap {
         console.log('✅ No critical or high severity vulnerabilities found');
       }
     } catch (error) {
-      console.warn('⚠️  Could not scan dependencies:', error.message);
+      console.warn('⚠️  Could not scan dependencies:', (error as Error).message);
     }
   }
 
@@ -175,29 +175,16 @@ export class SecurityBootstrap {
     const projectRoot = this.config.projectRoot!;
 
     // Initialize password hasher
-    globalThis.passwordHasher = createPasswordHasher({
-      rounds: 12,
-      pepper: process.env.PASSWORD_PEPPER,
-    });
+    globalThis.passwordHasher = createPasswordHasher(12);
 
     // Initialize credential generator
-    globalThis.credentialGenerator = createCredentialGenerator({
-      passwordLength: 32,
-      apiKeyLength: 48,
-    });
+    globalThis.credentialGenerator = createCredentialGenerator();
 
     // Initialize safe executor
-    globalThis.safeExecutor = createDevelopmentExecutor({
-      allowedCommands: ['git', 'npm', 'node', 'yarn', 'pnpm'],
-      timeout: 30000,
-      cwd: projectRoot,
-    });
+    globalThis.safeExecutor = createDevelopmentExecutor();
 
     // Initialize path validator
-    globalThis.pathValidator = createProjectPathValidator({
-      projectRoot,
-      allowedPrefixes: [projectRoot],
-    });
+    globalThis.pathValidator = createProjectPathValidator(projectRoot);
 
     console.log('✅ Security components initialized');
   }
